@@ -51,13 +51,7 @@ class Matrix:
     __rmul__=__mul__
 
     def __truediv__(self,other):
-        tquotient=Breuk()
-        if isinstance(self,Breuk) and isinstance(other,Breuk):
-            tquotient.a=self.a*other.b
-            tquotient.b=self.b*other.a
-        elif isinstance(self,Breuk) and isinstance(other,int):
-            tquotient.a=self.a
-            tquotient.b=self.b*other
+       
         else:
             raise TypeError("/: alleen breuken, integers")
         return tquotient.vereenvoudigBreuk()
