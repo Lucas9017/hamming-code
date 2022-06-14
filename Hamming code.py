@@ -2,18 +2,25 @@ class Matrix:
     def __init__(self, elementen = [1], kolommen = 1):
         self.elementen = elementen
         self.kolommen = kolommen
+    
+    def isMatrix(self):
+        if isinstance(self,Matrix) and len(self.elementen) % self.kolommen == 0:
+            return True
+        else:
+            return False
 
     def __str__(self):
-        if self.elementen is list and len(self.elementen) % self.kolommen == 0:
-            return self.elementen
+        if self.isMatrix():
+            return str(self.elementen) + ', ' + str(self.kolommen)
         else:
             raise TypeError('input is geen matrix')
 
     def __add__(self,other):
         som = Matrix()
-        if isinstance(self, Matrix) and isinstance(other, Matrix):
-            for i in range(0,len(self)):
+        if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
+            for i in range(0,len(self.elementen)):
                 som.elementen[i] = self.elementen[i] + other.elementen[i]
+                som.kolommen = self.kolommen
         else:
             raise TypeError('de matrices hebben niet de juiste afmetingen')
         return som
