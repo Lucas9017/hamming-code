@@ -48,7 +48,10 @@ class Matrix:
             if n == other.elementen // other.kolommen:
                 for i in range(0,m):
                     for j in range(0,p):
-                        1
+                        resultaat = 0
+                        for k in range(0,n):
+                            resultaat += self.elementen[i*m+n] * other.elementen[n*m+j]
+                        product.elementen.append(resultaat)
                 product.kolommen = self.kolommen
             else:
                 raise TypeError('de matrices hebben niet de juiste afmetingen')
