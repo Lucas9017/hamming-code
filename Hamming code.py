@@ -1,5 +1,5 @@
 class Matrix:
-    def __init__(self, elementen = [1], kolommen = 1):
+    def __init__(self, elementen = [], kolommen = 0):
         self.elementen = elementen
         self.kolommen = kolommen
     
@@ -19,8 +19,8 @@ class Matrix:
         som = Matrix()
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
             for i in range(0,len(self.elementen)):
-                som.elementen[i] = self.elementen[i] + other.elementen[i]
-                som.kolommen = self.kolommen
+                som.elementen.append(self.elementen[i] + other.elementen[i])
+            som.kolommen = self.kolommen
         else:
             raise TypeError('de matrices hebben niet de juiste afmetingen')
         return som
@@ -28,62 +28,33 @@ class Matrix:
     __radd__ = __add__
 
     def __sub__(self,other):
-        verschil = Breuk()
-        if isinstance(self,Breuk) and isinstance(other,Breuk):
-            verschil.a = int(self.a * other.b - other.a * self.b)
-            verschil.b = int(self.b * other.b)
-        elif isinstance(self,Breuk) and isinstance(other,int):
-            verschil.a=self.a-other*self.b
-            verschil.b=self.b
+        verschil = Matrix()
+        if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
+            for i in range(0,len(self.elementen)):
+                verschil.elementen.append(self.elementen[i] - other.elementen[i])
+            verschil.kolommen = self.kolommen
         else:
-            raise TypeError("-: alleen breuken, integer")
-        return verschil.vereenvoudigBreuk()
+            raise TypeError('de matrices hebben niet de juiste afmetingen')
+        return verschil
 
     __rsub__ = __sub__  
 
     def __mul__(self,other):
-        product=Breuk()
-        if isinstance(self,Breuk) and isinstance(other,Breuk):
-            product.a=self.a*other.a
-            product.b=self.b*other.b
-        elif isinstance(self,Breuk) and isinstance(other,int):
-            product.a=self.a*other
-            product.b=self.b
-        else:
-            raise TypeError("*: alleen breuken, integers")
-        return product.vereenvoudigBreuk()
+        product = Matrix()
+        if self.isMatrix() and other.isMatrix():
+            m = self.elementen // self.kolommen
+            n = self.kolommen
+            p = other.kolommen
+            if n == other.elementen // other.kolommen:
+                for i in range(0,m):
+                    for j in range(0,p):
+                        1
+                product.kolommen = self.kolommen
+            else:
+                raise TypeError('de matrices hebben niet de juiste afmetingen')
+        return product
 
     __rmul__=__mul__
-      
-
-    def __rtruediv__(self,other):
-        tquotient=Breuk()
-        if isinstance(self,Breuk) and isinstance(other,int):
-            tquotient.a=self.b*other
-            tquotient.b=self.a
-        else:
-            raise TypeError("/: alleen breuken, integers")
-        return tquotient.vereenvoudigBreuk()
-
-    def __lt__(self,other):
-        teller_s=self.a*other.b
-        teller_o=other.a*self.b
-        return teller_s<teller_o
-
-    def __le__(self,other):
-        teller_s=self.a*other.b
-        teller_o=other.a*self.b
-        return teller_s<=teller_o
-
-    def __gt__(self,other):
-        teller_s=self.a*other.b
-        teller_o=other.a*self.b
-        return teller_s>teller_o
-
-    def __ge__(self,other):
-        teller_s=self.a*other.b
-        teller_o=other.a*self.b
-        return teller_s>=teller_o
 
     def __eq__(self,other):
         teller_s=self.a*other.b
@@ -103,10 +74,3 @@ class Matrix:
 
     def __pos__(self):
         return self
-
-    def __abs__(self):
-        if self.a<0:
-            return -self
-        elif self.a>=0:
-            return self
-        
