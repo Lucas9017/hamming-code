@@ -63,7 +63,7 @@ class Matrix:
             raise TypeError('De input zijn geen matrices')
         return product
 
-    __rmul__=__mul__ #deze moet wel blijven staan omdat je een matrix met int kan vermenigvuldigen
+    __rmul__=__mul__ #deze moet wel blijven staan omdat je een integer met een matrix kan vermenigvuldigen
     
     def __eq__(self,other):
         if len(self.elementen)!=len(other.elementen) or self.kolommen!=other.kolommen:
