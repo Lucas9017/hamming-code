@@ -4,7 +4,7 @@ class Matrix:
         self.kolommen = kolommen
     
     def isMatrix(self):
-        if isinstance(self,Matrix) and len(self.elementen) % self.kolommen == 0:
+        if isinstance(self,Matrix) and len(self.elementen) % self.kolommen == 0 and isinstance(self.kolommen, int):
             return True
         else:
             return False
@@ -16,8 +16,8 @@ class Matrix:
             raise TypeError('input is geen matrix')
 
     def __add__(self,other):
-        som = Matrix()
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
+            som = self
             for i in range(0,len(self.elementen)):
                 som.elementen.append(self.elementen[i] + other.elementen[i])
             som.kolommen = self.kolommen
@@ -29,11 +29,10 @@ class Matrix:
     __radd__ = __add__ #vgm kunnen we dit weghalen ,omdat we alleen matrices met elkaar op kunnen tellen en niet een matrix met een int bijv
 
     def __sub__(self,other):
-        verschil = Matrix()
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
+            verschil = self
             for i in range(0,len(self.elementen)):
-                verschil.elementen.append(self.elementen[i] - other.elementen[i])
-            verschil.kolommen = self.kolommen
+                verschil.elementen[i]= self.elementen[i] - other.elementen[i]
         else:
             raise TypeError('de matrices hebben niet de juiste afmetingen')
         return verschil
@@ -63,6 +62,8 @@ class Matrix:
                 product.kolommen=other.kolommen
             else:
                 raise TypeError('de matrices hebben niet de juiste afmetingen')
+        else:
+            raise TypeError('De input zijn geen matrices')
         return product
 
     __rmul__=__mul__ #deze moet wel blijven staan omdat je een matrix met int kan vermenigvuldigen
