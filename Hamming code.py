@@ -16,9 +16,8 @@ class Matrix:
             raise TypeError('input is geen matrix')
 
     def __add__(self,other):
+        som = Matrix()
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
-            som = Matrix()
-            print(self.elementen)
             for i in range(0,len(self.elementen)):
                 som.elementen.append(self.elementen[i] + other.elementen[i])
             som.kolommen = self.kolommen
@@ -50,7 +49,6 @@ class Matrix:
             m = len(self.elementen) // self.kolommen
             n = self.kolommen
             p = other.kolommen
-            print(product)
             if n == len(other.elementen) // other.kolommen:
                 for i in range(0,m):
                     for j in range(0,p):
@@ -105,22 +103,16 @@ def nibbles(input):
 
 def parity_vector(input):
     lijst=nibbles(input)
-    print(lijst)
     G=Matrix([1,1,0,1,1,0,1,1,1,0,0,0,0,1,1,1,0,1,0,0,0,0,1,0,0,0,0,1],4)
     for i in range(len(lijst)):
-        print(lijst[i])
         x=Matrix(lijst[i],1)
         lijst[i]=G*x
-        print('G*x=',str(G*x))
-        print(type(lijst[i]))
     return lijst
 
 def parity_check(input):
     lijst=parity_vector(input)
-    print(lijst)
     H=Matrix([1,0,1,0,1,0,1,0,1,1,0,0,1,1,0,0,0,1,1,1,1],7)
     for i in range(len(lijst)):
-        print(lijst[i])
         lijst[i]= H*lijst[i]
     return lijst
         
