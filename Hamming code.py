@@ -1,5 +1,5 @@
 class Matrix:
-    def __init__(self, elementen = [0], kolommen = 1):
+    def __init__(self, elementen = [], kolommen = 1):
         self.elementen = elementen
         self.kolommen = kolommen
     
@@ -17,11 +17,11 @@ class Matrix:
 
     def __add__(self,other):
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
-            som = self
+            som = Matrix()
+            print(self.elementen)
             for i in range(0,len(self.elementen)):
                 som.elementen.append(self.elementen[i] + other.elementen[i])
             som.kolommen = self.kolommen
-            print(som.elementen)
         else:
             raise TypeError('de matrices hebben niet de juiste afmetingen')
         return som
@@ -30,7 +30,7 @@ class Matrix:
 
     def __sub__(self,other):
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
-            verschil = self
+            verschil = Matrix()
             for i in range(0,len(self.elementen)):
                 verschil.elementen[i]= self.elementen[i] - other.elementen[i]
         else:
@@ -58,7 +58,6 @@ class Matrix:
                         for k in range(0,n):
                             resultaat += self.elementen[i*n+k] * other.elementen[j+k*p]
                         product.elementen.append(resultaat%2)
-                        print(product.elementen)
                 product.kolommen=other.kolommen
             else:
                 raise TypeError('de matrices hebben niet de juiste afmetingen')
