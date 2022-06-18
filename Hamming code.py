@@ -59,7 +59,7 @@ class Matrix:
                         for k in range(0,n):
                             resultaat += self.elementen[i*n+k] * other.elementen[k*p+j] #De som van rij i van self met kolom j van other
                         product.elementen.append(resultaat%2)
-                product.kolommen = n
+                product.kolommen = p
             else:
                 raise TypeError('de matrices hebben niet de juiste afmetingen')
         else:
@@ -154,13 +154,14 @@ def decodeer(input):
     R=Matrix([0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],7)
     for i in range(len(lijst)):
         x=R*lijst[i]
-        x=[str(element) for element in x]
+        x=[str(element) for element in x.elementen]
         lijst[i]=''.join(x)
     lijst=[element for element in lijst]
     binair_rij=int(''.join(lijst))
-    n=len(binair_rij)//7
-    binair=binair_rij[:n]
+    binair=str(binair_rij)
+    n=len(binair)//7
     uitvoer=''
-    for i in range(0,len(binair),7):
-        uitvoer+=chr(binair[i]*64+binair[i+1]*32+binair[i+2]*16+binair[i+3]*8+binair[i+4]*4+binair[i+5]*2+binair[i+6]*1)
+    for i in range(0,7*n,7):
+        uitvoer+=chr(int(binair[i])*64+int(binair[i+1])*32+int(binair[i+2])*16+int(binair[i+3])*8+int(binair[i+4])*4+int(binair[i+5])*2+int(binair[i+6])*1)
+    return uitvoer
         
