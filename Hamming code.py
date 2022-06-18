@@ -1,7 +1,7 @@
 class Matrix:
     def __init__(self, elementen = [], kolommen = 1):
-        self.elementen = elementen
-        self.kolommen = kolommen
+        self.elementen = elementen #De getallen van de matrix als lijst
+        self.kolommen = kolommen #Aantal kolommen van de matrix
     
     def isMatrix(self):
         if isinstance(self,Matrix) and len(self.elementen) % self.kolommen == 0 and isinstance(self.kolommen, int):
@@ -17,7 +17,7 @@ class Matrix:
 
     def __add__(self,other):
         som = Matrix()
-        if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
+        if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen: #Check of de matrices dezelfde afmetingen hebben
             for i in range(0,len(self.elementen)):
                 som.elementen.append(self.elementen[i] + other.elementen[i])
             som.kolommen = self.kolommen
@@ -28,7 +28,7 @@ class Matrix:
     __radd__ = __add__ #vgm kunnen we dit weghalen ,omdat we alleen matrices met elkaar op kunnen tellen en niet een matrix met een int bijv
 
     def __sub__(self,other):
-        if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
+        if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen: #Check of de matrices dezelfde afmetingen hebben
             verschil = Matrix()
             for i in range(0,len(self.elementen)):
                 verschil.elementen[i]= self.elementen[i] - other.elementen[i]
@@ -39,14 +39,13 @@ class Matrix:
     __rsub__ = __sub__  #vgm kunnen we dit weghalen omdat we alleen matrices van elkaar af kunnen halen en niet een matrix van een int af bijv
 
     def __mul__(self,other):
-        product = Matrix()
-        if self.isMatrix() and isinstance(other,int):
-            m=len(self.elementen)
-            for i in range(0,m):
-                product.elementen.append(self.elementen[i]*other)
-                product.kolommen=self.kolommen
-        elif self.isMatrix() and other.isMatrix():
-            m = len(self.elementen) // self.kolommen
+        if self.isMatrix() and isinstance(other,float): #Vermenigvuldigen matrix met reëel getal
+            product = self
+            for i in range(0,len(self.elementen)):
+                product.elementen[i]= self.elementen[i] * other
+        elif self.isMatrix() and other.isMatrix(): #Vermenigvuldigen van twee matrices
+            product = Matrix()
+            m = len(self.elementen) // self.kolommen #Aantal rijen van self
             n = self.kolommen
             p = other.kolommen
             if n == len(other.elementen) // other.kolommen:
@@ -54,9 +53,9 @@ class Matrix:
                     for j in range(0,p):
                         resultaat = 0
                         for k in range(0,n):
-                            resultaat += self.elementen[i*n+k] * other.elementen[j+k*p]
+                            resultaat += self.elementen[i*n+k] * other.elementen[k*p+j] #De som van rij i van self met kolom j van other
                         product.elementen.append(resultaat%2)
-                product.kolommen=other.kolommen
+                product.kolommen = n
             else:
                 raise TypeError('de matrices hebben niet de juiste afmetingen')
         else:
