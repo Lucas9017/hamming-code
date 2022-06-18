@@ -1,7 +1,7 @@
 class Matrix:
     def __init__(self, elementen = [], kolommen = 1):
-        self.elementen = elementen
-        self.kolommen = kolommen
+        self.elementen = elementen #De getallen van de matrix als lijst
+        self.kolommen = kolommen #Aantal kolommen van de matrix
     
     def isMatrix(self):
         if isinstance(self,Matrix) and len(self.elementen) % self.kolommen == 0 and isinstance(self.kolommen, int):
@@ -39,14 +39,13 @@ class Matrix:
     __rsub__ = __sub__  #vgm kunnen we dit weghalen omdat we alleen matrices van elkaar af kunnen halen en niet een matrix van een int af bijv
 
     def __mul__(self,other):
-        product = Matrix([],1)
-        if self.isMatrix() and isinstance(other,int):
-            m=len(self.elementen)
-            for i in range(0,m):
-                product.elementen.append(self.elementen[i]*other)
-                product.kolommen=self.kolommen
-        elif self.isMatrix() and other.isMatrix():
-            m = len(self.elementen) // self.kolommen
+        if self.isMatrix() and isinstance(other,float): #Vermenigvuldigen matrix met reëel getal
+            product = self
+            for i in range(0,len(self.elementen)):
+                product.elementen[i]= self.elementen[i] * other
+        elif self.isMatrix() and other.isMatrix(): #Vermenigvuldigen van twee matrices
+            product = Matrix([],1)
+            m = len(self.elementen) // self.kolommen #Aantal rijen van self
             n = self.kolommen
             p = other.kolommen
             if n == len(other.elementen) // other.kolommen:
@@ -54,9 +53,9 @@ class Matrix:
                     for j in range(0,p):
                         resultaat = 0
                         for k in range(0,n):
-                            resultaat += self.elementen[i*n+k] * other.elementen[j+k*p]
+                            resultaat += self.elementen[i*n+k] * other.elementen[k*p+j] #De som van rij i van self met kolom j van other
                         product.elementen.append(resultaat%2)
-                product.kolommen=other.kolommen
+                product.kolommen = n
             else:
                 raise TypeError('de matrices hebben niet de juiste afmetingen')
         else:
@@ -82,6 +81,24 @@ class Matrix:
                 if self.elementen[i]!=other.elementen[i]:
                     return True
             return False
+        
+def decimaalBinair(decimaal):
+    if decimaal == 0:
+        return 0
+    else:
+        binair = []
+        while decimaal > 0:
+            if decimaal % 2 == 0:
+                binair.append(0)
+                decimaal = decimaal // 2
+            else:
+                binair.append(1)
+                decimaal = decimaal // 2
+        
+        tekst = ""
+    for i in range(0,len(binair)): 
+        tekst += str(binair[len(binair)-i-1])
+    return tekst
     
 def nibbles(input):
     binair=''
