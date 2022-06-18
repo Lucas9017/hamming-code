@@ -81,6 +81,24 @@ class Matrix:
                 if self.elementen[i]!=other.elementen[i]:
                     return True
             return False
+        
+def decimaalBinair(decimaal):
+    if decimaal == 0:
+        return 0
+    else:
+        binair = []
+        while decimaal > 0:
+            if decimaal % 2 == 0:
+                binair.append(0)
+                decimaal = decimaal // 2
+            else:
+                binair.append(1)
+                decimaal = decimaal // 2
+        
+        tekst = ""
+    for i in range(0,len(binair)): 
+        tekst += str(binair[len(binair)-i-1])
+    return tekst
     
 def nibbles(input):
     binair=''
