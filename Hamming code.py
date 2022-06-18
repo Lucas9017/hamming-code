@@ -102,7 +102,14 @@ def decimaalBinair(decimaal):
         tekst = ""
     for i in range(0,len(binair)): 
         tekst += str(binair[len(binair)-i-1])
-    return tekst
+    return int(tekst)
+
+def binairDecimaal(binair):
+    lijst = [int(x) for x in str(binair)]
+    decimaal = 0
+    for i in range(0,len(lijst)):
+        decimaal += lijst[i] * 2**(len(lijst)-i-1)
+    return decimaal
     
 def nibbles(input):
     binair=''
