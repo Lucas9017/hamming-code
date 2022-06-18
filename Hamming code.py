@@ -43,6 +43,10 @@ class Matrix:
             product = self
             for i in range(0,len(self.elementen)):
                 product.elementen[i]= self.elementen[i] * other
+        elif self.isMatrix() and isinstance(other,int): #Vermenigvuldigen matrix met reëel getal
+            product = self
+            for i in range(0,len(self.elementen)):
+                product.elementen[i]= self.elementen[i] * other
         elif self.isMatrix() and other.isMatrix(): #Vermenigvuldigen van twee matrices
             product = Matrix([],1)
             m = len(self.elementen) // self.kolommen #Aantal rijen van self
