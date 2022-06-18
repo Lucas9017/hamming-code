@@ -16,7 +16,7 @@ class Matrix:
             raise TypeError('input is geen matrix')
 
     def __add__(self,other):
-        som = Matrix()
+        som = Matrix([],1)
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
             for i in range(0,len(self.elementen)):
                 som.elementen.append(self.elementen[i] + other.elementen[i])
@@ -29,7 +29,7 @@ class Matrix:
 
     def __sub__(self,other):
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
-            verschil = Matrix()
+            verschil = Matrix([],1)
             for i in range(0,len(self.elementen)):
                 verschil.elementen[i]= self.elementen[i] - other.elementen[i]
         else:
@@ -39,7 +39,7 @@ class Matrix:
     __rsub__ = __sub__  #vgm kunnen we dit weghalen omdat we alleen matrices van elkaar af kunnen halen en niet een matrix van een int af bijv
 
     def __mul__(self,other):
-        product = Matrix()
+        product = Matrix([],1)
         if self.isMatrix() and isinstance(other,int):
             m=len(self.elementen)
             for i in range(0,m):
