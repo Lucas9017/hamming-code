@@ -1,3 +1,4 @@
+import random
 class Matrix:
     def __init__(self, elementen = [], kolommen = 1):
         self.elementen = elementen #De getallen van de matrix als lijst
@@ -25,8 +26,6 @@ class Matrix:
             raise TypeError('de matrices hebben niet de juiste afmetingen')
         return som
 
-    __radd__ = __add__ #vgm kunnen we dit weghalen ,omdat we alleen matrices met elkaar op kunnen tellen en niet een matrix met een int bijv
-
     def __sub__(self,other):
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
             verschil = Matrix([],1)
@@ -35,8 +34,6 @@ class Matrix:
         else:
             raise TypeError('de matrices hebben niet de juiste afmetingen')
         return verschil
-
-    __rsub__ = __sub__  #vgm kunnen we dit weghalen omdat we alleen matrices van elkaar af kunnen halen en niet een matrix van een int af bijv
 
     def __mul__(self,other):
         if self.isMatrix() and isinstance(other,float): #Vermenigvuldigen matrix met reëel getal
@@ -130,39 +127,39 @@ def nibbles(input):
     return lijst
 
 def parity_vector(input):
-    lijst=nibbles(input)
+    lijst=[]
     G=Matrix([1,1,0,1,1,0,1,1,1,0,0,0,0,1,1,1,0,1,0,0,0,0,1,0,0,0,0,1],4)
-    for i in range(len(lijst)):
-        x=Matrix(lijst[i],1)
-        lijst[i]=G*x
+    for i in range(len(input)):
+        x=Matrix(input[i],1)
+        lijst+=[G*x]
     return lijst
 
 def parity_check(input):
-    lijst=parity_vector(input)
+    lijst=[]
     H=Matrix([1,0,1,0,1,0,1,0,1,1,0,0,1,1,0,0,0,1,1,1,1],7)
-    for i in range(len(lijst)):
-        lijst[i]= H*lijst[i]
+    for i in range(len(input)):
+        lijst+=[H*input[i]]
     return lijst
         
-def correct(input):
-    lijst_check=parity_check(input)
-    lijst_vector=parity_vector(input)
+def correct(vector,check):
+    lijst_check=check
+    lijst_vector=vector
     for i in range(len(lijst_check)):
         if lijst_check[i]!=Matrix([0,0,0],1):
-            plek0=str(lijst_check[i].elementen[0])
-            plek1=str(lijst_check[i].elementen[1])
-            plek2=str(lijst_check[i].elementen[2])
-            plek=plek0*(4)+plek1*(2)+plek2*1
-            lijst_vector[i][plek]=(lijst_vector[i][plek]+1)%2
+            plek0=int(lijst_check[i].elementen[0])
+            plek1=int(lijst_check[i].elementen[1])
+            plek2=int(lijst_check[i].elementen[2])
+            plek=plek2*(4)+plek1*(2)+plek0*1-1
+            lijst_vector[i].elementen[plek]=(lijst_vector[i].elementen[plek]+1)%2
     return lijst_vector
       
 def decodeer(input):
-    lijst=correct(input)
+    lijst=[]
     R=Matrix([0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],7)
-    for i in range(len(lijst)):
-        x=R*lijst[i]
+    for i in range(len(input)):
+        x=R*input[i]
         x=[str(element) for element in x.elementen]
-        lijst[i]=''.join(x)
+        lijst+=[''.join(x)]
     lijst=[element for element in lijst]
     binair_rij=int(''.join(lijst))
     binair=str(binair_rij)
@@ -171,4 +168,32 @@ def decodeer(input):
     for i in range(0,7*n,7):
         uitvoer+=chr(int(binair[i])*64+int(binair[i+1])*32+int(binair[i+2])*16+int(binair[i+3])*8+int(binair[i+4])*4+int(binair[i+5])*2+int(binair[i+6])*1)
     return uitvoer
+
+def random_verandering(input,aantal):
+    verstuur=input
+    lijst=[]
+    for i in range(len(verstuur)):
+        lijst+=list(verstuur[i].elementen)
+    lengte=len(lijst)
+    k = random.sample(range(0,lengte),aantal)
+    for j in k:
+        lijst[j]=(int(lijst[j])+1)%2
+    ontvangst=[]
+    for i in range(0,lengte,7):
+        ontvangst+=[Matrix([lijst[i],lijst[i+1],lijst[i+2],lijst[i+3],lijst[i+4],lijst[i+5],lijst[i+6]],1)]
+    return ontvangst
         
+def hamming(input,aantal):
+    n=nibbles(input)
+    v=parity_vector(n)
+    r=random_verandering(v,aantal)
+    print('Uw boodschap na de fouten is: ',decodeer(r))
+    c=parity_check(r)
+    cor=correct(r,c)
+    d=decodeer(cor)
+    return d
+
+def hamming_code():
+    code=str(input('Wat wilt u versturen?: '))
+    aantal=int(input('Hoeveel fouten wilt u hebben tijdens het versturen?: '))
+    return hamming(code,aantal)
