@@ -161,7 +161,7 @@ def correct(vector,check):
             plek0=int(lijst_check[i].elementen[0])
             plek1=int(lijst_check[i].elementen[1])
             plek2=int(lijst_check[i].elementen[2])
-            plek=plek2*(4)+plek1*(2)+plek0*1-1
+            plek=binairDecimaal(str(plek2)+str(plek1)+str(plek0))-1
             lijst_vector[i].elementen[plek]=(lijst_vector[i].elementen[plek]+1)%2
     return lijst_vector
       
@@ -177,7 +177,7 @@ def decodeer(input):
     binair=str(binair_rij)
     uitvoer=''
     for i in range(0,len(binair),8):
-        uitvoer+=chr(int(binair[i])*128+int(binair[i+1])*64+int(binair[i+2])*32+int(binair[i+3])*16+int(binair[i+4])*8+int(binair[i+5])*4+int(binair[i+6])*2+int(binair[i+7])*1)
+        uitvoer+=chr(binairDecimaal(binair[i:i+8]))
     return uitvoer
 
 def random_verandering(input,aantal):
