@@ -205,6 +205,15 @@ def hamming(input,aantal):
     return d
 
 def hamming_code():
-    code=str(input('Wat wilt u versturen?: '))
-    aantal=int(input('Hoeveel fouten wilt u hebben tijdens het versturen?: '))
+    code=str(input('Wat wilt u versturen? '))
+    binair=''
+    for i in code:
+        x=decimaalBinair(ord(i))
+        l=8-len(x)
+        if l==0:
+            binair+=x
+        else:
+            binair+='0'*l+x
+    lengte=len(binair)
+    aantal=int(input('Uw boodschap bevat '+str(lengte )+' bits. Hoeveel fouten moeten er ontstaan in deze bits bij het versturen? '))
     return hamming(code,aantal)
