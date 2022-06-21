@@ -84,6 +84,19 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
                     return True
             return False
         
+    def __pos__(self):
+        if self.isMatrix():
+            return self
+    
+    def __neg__(self):
+        if self.isMatrix():
+            negatie = Matrix([],1)
+            for i in range(0, len(self.elementen)):
+                negatie.elementen.append((-1 * self.elementen[i] & 2))
+            negatie.kolommen = self.kolommen
+            return negatie
+        
+        
 def decimaalBinair(decimaal):
     if decimaal == 0:
         return 0
