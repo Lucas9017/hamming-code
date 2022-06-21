@@ -99,7 +99,7 @@ def decimaalBinair(decimaal):
         tekst = ""
     for i in range(0,len(binair)): 
         tekst += str(binair[len(binair)-i-1])
-    return int(tekst)
+    return tekst
 
 def binairDecimaal(binair):
     lijst = [int(x) for x in str(binair)]
@@ -111,19 +111,17 @@ def binairDecimaal(binair):
 def nibbles(input):
     binair=''
     for i in input:
-        binair+=bin(ord(i))[2:]
-    lengte=len(binair)
-    if lengte%4==1: #ik heb dit hier even gezet omdat we anders een error kregen als de lengte van de binaire code niet deelbaar was door 4
-        binair+='000'
-    elif lengte%4==2:
-        binair+='00'
-    elif lengte%4==3:
-        binair+='0'
+        x=decimaalBinair(ord(i))
+        l=8-len(x)
+        if l==0:
+            binair+=x
+        else:
+            binair+='0'*l+x
     lengte=len(binair)
     lijst=[[] for i in range(0,lengte,4)]
     for i in range(len(lijst)):
         for j in range(0,4):
-            lijst[i].append(int(binair[i*4+j]))
+            lijst[i]+=[int(binair[i*4+j])]
     return lijst
 
 def parity_vector(input):
@@ -161,12 +159,11 @@ def decodeer(input):
         x=[str(element) for element in x.elementen]
         lijst+=[''.join(x)]
     lijst=[element for element in lijst]
-    binair_rij=int(''.join(lijst))
+    binair_rij=''.join(lijst)
     binair=str(binair_rij)
-    n=len(binair)//7
     uitvoer=''
-    for i in range(0,7*n,7):
-        uitvoer+=chr(int(binair[i])*64+int(binair[i+1])*32+int(binair[i+2])*16+int(binair[i+3])*8+int(binair[i+4])*4+int(binair[i+5])*2+int(binair[i+6])*1)
+    for i in range(0,len(binair),8):
+        uitvoer+=chr(int(binair[i])*128+int(binair[i+1])*64+int(binair[i+2])*32+int(binair[i+3])*16+int(binair[i+4])*8+int(binair[i+5])*4+int(binair[i+6])*2+int(binair[i+7])*1)
     return uitvoer
 
 def random_verandering(input,aantal):
