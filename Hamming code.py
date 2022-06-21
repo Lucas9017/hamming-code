@@ -1,5 +1,5 @@
 import random
-class Matrix:
+class Matrix: #De getallen van de matrix behandelen we modulo 2
     def __init__(self, elementen = [], kolommen = 1):
         self.elementen = elementen #De getallen van de matrix als lijst
         self.kolommen = kolommen #Aantal kolommen van de matrix
@@ -20,17 +20,18 @@ class Matrix:
         som = Matrix([],1)
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
             for i in range(0,len(self.elementen)):
-                som.elementen.append(self.elementen[i] + other.elementen[i])
+                som.elementen.append((self.elementen[i] + other.elementen[i]) % 2)
             som.kolommen = self.kolommen
         else:
             raise TypeError('de matrices hebben niet de juiste afmetingen')
         return som
 
     def __sub__(self,other):
+        verschil = Matrix([],1)
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
-            verschil = Matrix([],1)
             for i in range(0,len(self.elementen)):
-                verschil.elementen[i]= self.elementen[i] - other.elementen[i]
+                verschil.elementen.append((self.elementen[i] - other.elementen[i]) % 2)
+            verschil.kolommen = self.kolommen
         else:
             raise TypeError('de matrices hebben niet de juiste afmetingen')
         return verschil
@@ -55,7 +56,7 @@ class Matrix:
                         resultaat = 0
                         for k in range(0,n):
                             resultaat += self.elementen[i*n+k] * other.elementen[k*p+j] #De som van rij i van self met kolom j van other
-                        product.elementen.append(resultaat%2)
+                        product.elementen.append(resultaat % 2)
                 product.kolommen = p
             else:
                 raise TypeError('de matrices hebben niet de juiste afmetingen')
@@ -63,14 +64,14 @@ class Matrix:
             raise TypeError('De input zijn geen matrices')
         return product
 
-    __rmul__=__mul__ #deze moet wel blijven staan omdat je een integer met een matrix kan vermenigvuldigen
+    __rmul__=__mul__
     
     def __eq__(self,other):
         if len(self.elementen)!=len(other.elementen) or self.kolommen!=other.kolommen:
             return False
         else:
-            for i in range(len(self.elementen)):
-                if self.elementen[i]!=other.elementen[i]:
+            for i in range(0,len(self.elementen)):
+                if (self.elementen[i] % 2 ) != (other.elementen[i]% 2):
                     return False
             return True
     
@@ -78,8 +79,8 @@ class Matrix:
         if len(self.elementen)!=len(other.elementen) or self.kolommen!=other.kolommen:
             return True
         else:
-            for i in range(len(self.elementen)):
-                if self.elementen[i]!=other.elementen[i]:
+            for i in range(0, len(self.elementen)):
+                if (self.elementen[i] % 2) != (other.elementen[i] % 2):
                     return True
             return False
         
