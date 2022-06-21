@@ -202,5 +202,5 @@ def hamming_code():
         else:
             binair+='0'*l+x
     lengte=len(binair)
-    aantal=int(input('Uw boodschap bevat '+str(lengte)+' bits. Hoeveel fouten moeten er ontstaan in deze bits bij het versturen? '))
+    aantal=int(input('Uw boodschap bevat '+str(lengte )+' bits. Hoeveel fouten moeten er ontstaan in deze bits bij het versturen? '))
     return hamming(code,aantal)
