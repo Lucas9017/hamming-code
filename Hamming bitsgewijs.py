@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jun 21 17:05:37 2022
-
-@author: ravdk
-"""
 import random
 def decimaalBinair(decimaal):
     if decimaal == 0:
