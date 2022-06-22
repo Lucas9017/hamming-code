@@ -1,7 +1,7 @@
 import time
 
 tik=time.perf_counter()
-ham=hamming('Hallo, hoe gaat het?',12)
+ham=hamming('Hallo, hoe gaat het?',10)
 tak=time.perf_counter()
 tijd=tak-tik
 
