@@ -87,7 +87,7 @@ def random_verandering(input,aantal):
     return ontvangst
         
 def hamming(input,aantal):
-    n=nibbles(input)
+    n=nibbles(str(input))
     v=parity_vector(n)
     r=random_verandering(v,aantal)
     print('Uw boodschap na de fouten is: ',decodeer(r))
