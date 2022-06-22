@@ -87,6 +87,8 @@ def random_verandering(input,aantal):
     return ontvangst
         
 def hamming(input,aantal):
+    if type(aantal)!=int:
+        raise TypeError('Er is geen geldig aantal fouten opgegeven')
     n=nibbles(str(input))
     v=parity_vector(n)
     r=random_verandering(v,aantal)
