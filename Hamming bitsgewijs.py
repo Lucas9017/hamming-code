@@ -87,12 +87,12 @@ def random_verandering(input,aantal):
     return ontvangst
         
 def hamming(input,aantal):
-    if type(aantal)!=int:
-        raise TypeError('Er is geen geldig aantal fouten opgegeven')
+    if type(aantal)!=int or aantal<0:
+        raise TypeError('Er is geen geldig aantal fouten opgegeven.')
     n=nibbles(str(input))
     v=parity_vector(n)
     r=random_verandering(v,aantal)
-    print('Uw boodschap na de fouten is: ',decodeer(r))
+    print('Uw boodschap na de fouten is:',decodeer(r))
     c=check_correct(r)
     d=decodeer(c)
     return d
@@ -107,6 +107,9 @@ def hamming_code():
             binair+=x
         else:
             binair+='0'*l+x
-    lengte=len(binair)
+    hvh=len(binair)//4
+    lengte=hvh*7
     aantal=int(input('Uw boodschap bevat '+str(lengte )+' bits. Hoeveel fouten moeten er ontstaan in deze bits bij het versturen? '))
+    if aantal>lengte:
+        raise TypeError('Er is geen geldig aantal fouten opgegeven.')
     return hamming(code,aantal)
