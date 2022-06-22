@@ -1,18 +1,27 @@
 import random
 class Matrix: #De getallen van de matrix behandelen we modulo 2
     def __init__(self, elementen = [], kolommen = 1):
-        self.elementen = elementen #De getallen van de matrix als lijst
+        self.elementen = elementen #De getallen van de matrix als lijst met gehele getallen
         self.kolommen = kolommen #Aantal kolommen van de matrix
     
     def isMatrix(self):
         if isinstance(self,Matrix) and len(self.elementen) % self.kolommen == 0 and isinstance(self.kolommen, int):
+            for i in range(0, len(self.elementen)):
+                if isinstance(self.elementen[i], int):
+                    continue
+                else:
+                    return False
             return True
         else:
             return False
 
     def __str__(self):
         if self.isMatrix():
-            return str(self.elementen) + ', ' + str(self.kolommen)
+            output = Matrix([],1)
+            for i in range(0, len(self.elementen)):
+                output.elementen.append(self.elementen[i] % 2)
+            output.kolommen = self.kolommen
+            return str(output.elementen) + ', ' + str(output.kolommen)
         else:
             raise TypeError('input is geen matrix')
 
@@ -37,16 +46,11 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
         return verschil
 
     def __mul__(self,other):
-        if self.isMatrix() and isinstance(other,float): #Vermenigvuldigen matrix met reëel getal
-            product = self
+        product = Matrix([],1)
+        if self.isMatrix() and isinstance(other,int): #Vermenigvuldigen matrix met geheel getal
             for i in range(0,len(self.elementen)):
-                product.elementen[i]= self.elementen[i] * other
-        elif self.isMatrix() and isinstance(other,int): #Vermenigvuldigen matrix met reëel getal
-            product = self
-            for i in range(0,len(self.elementen)):
-                product.elementen[i]= self.elementen[i] * other
+                product.elementen.append((self.elementen[i] * other) % 2)
         elif self.isMatrix() and other.isMatrix(): #Vermenigvuldigen van twee matrices
-            product = Matrix([],1)
             m = len(self.elementen) // self.kolommen #Aantal rijen van self
             n = self.kolommen
             p = other.kolommen
@@ -71,7 +75,7 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
             return False
         else:
             for i in range(0,len(self.elementen)):
-                if (self.elementen[i] % 2 ) != (other.elementen[i]% 2):
+                if (self.elementen[i] % 2 ) != (other.elementen[i] % 2):
                     return False
             return True
     
@@ -86,13 +90,17 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
         
     def __pos__(self):
         if self.isMatrix():
-            return self
+            positief = Matrix([],1)
+            for i in range(0, len(self.elementen)):
+                positief.elementen.append(self.elementen[i] % 2)
+            positief.kolommen = self.kolommen
+            return positief
     
     def __neg__(self):
         if self.isMatrix():
             negatie = Matrix([],1)
             for i in range(0, len(self.elementen)):
-                negatie.elementen.append((-1 * self.elementen[i] & 2))
+                negatie.elementen.append((-1 * self.elementen[i] % 2))
             negatie.kolommen = self.kolommen
             return negatie
         
