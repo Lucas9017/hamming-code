@@ -1,10 +1,23 @@
 import random
-class Matrix: #De getallen van de matrix behandelen we modulo 2
+class Matrix:#De getallen van de matrix behandelen we modulo 2
+    '''
+    Een klasse om Matrices te definiëren
+    
+    De attributen zijn een lijst van elementen en een positief geheel getal dat
+    het aantal kolommen representeert.
+    '''
     def __init__(self, elementen = [], kolommen = 1):
         self.elementen = elementen #De getallen van de matrix als lijst met gehele getallen
         self.kolommen = kolommen #Aantal kolommen van de matrix
     
     def isMatrix(self):
+        '''
+        Controleert of de invoer een matrix kán zijn, dus of de matrix überhaupt 
+        in de klasse Matrix zit, of het aantal kolommen overeenkomt met het aantal 
+        elementen, en of de elementen gehele getallen zijn.
+            Invoer: alles kan ingevoerd worden
+            Uitvoer: boolean True of False
+        '''
         if isinstance(self,Matrix) and len(self.elementen) % self.kolommen == 0 and isinstance(self.kolommen, int):
             for i in range(0, len(self.elementen)):
                 if isinstance(self.elementen[i], int):
@@ -16,6 +29,12 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
             return False
 
     def __str__(self):
+        '''
+        Print de matrix in lijst vorm met het aantal kolommen er naast.
+            Invoer: self: een element uit de klasse Matrix
+            Uitvoer: str: de lijst met de elementen van de matrix, waarnaast het aantal
+                     kolommen wordt geprint.
+        '''
         if self.isMatrix():
             output = Matrix([],1)
             for i in range(0, len(self.elementen)):
@@ -26,6 +45,13 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
             raise TypeError('input is geen matrix')
 
     def __add__(self,other):
+        '''
+        Geeft de optelling van twee matrices terug.
+            Invoer: self: een element van de klasse Matrix
+                    other: een element van de klasse Matrix
+                    de matrices moeten evenveel elementen bevatten en evenveel kolommen hebben
+            Uitvoer: som: de som van de matrices self en other
+        '''
         som = Matrix([],1)
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
             for i in range(0,len(self.elementen)):
@@ -36,6 +62,12 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
         return som
 
     def __sub__(self,other):
+        '''
+        Geeft het verschil van twee matrices terug.
+            Invoer: self: een element van de klasse Matrix
+                    other: een element van de klasse Matrix
+            Uitvoer: verschil: het verschil van de matrices self en other
+        '''
         verschil = Matrix([],1)
         if self.isMatrix() and other.isMatrix() and len(self.elementen) == len(other.elementen) and self.kolommen == other.kolommen:
             for i in range(0,len(self.elementen)):
@@ -46,6 +78,12 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
         return verschil
 
     def __mul__(self,other):
+        ''' 
+        Geeft het product van twee matrices terug.
+            Invoer: self: een element van de klasse Matrix
+                    other: een element van de klasse Matrix
+            Uitvoer: product: het product van de matrices self en other
+        '''
         product = Matrix([],1)
         if self.isMatrix() and isinstance(other,int): #Vermenigvuldigen matrix met geheel getal
             for i in range(0,len(self.elementen)):
@@ -71,6 +109,12 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
     __rmul__=__mul__
     
     def __eq__(self,other):
+        '''
+        Controleert of twee matrices gelijk aan elkaar zijn.
+            Invoer: self: een element uit de klasse Matrix
+                    other: een element uit de klasse Matrix
+            Uitvoer: boolean True of False
+        '''
         if len(self.elementen)!=len(other.elementen) or self.kolommen!=other.kolommen:
             return False
         else:
@@ -80,6 +124,12 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
             return True
     
     def __neq__(self,other):
+        '''
+        Controleert of twee matrices ongelijk aan elkaar zijn.
+            Invoer: self: een element van de klasse Matrix
+                    other: een element van de klasse Matrix
+                Uitvoer: boolean True of False
+        '''
         if len(self.elementen)!=len(other.elementen) or self.kolommen!=other.kolommen:
             return True
         else:
@@ -89,6 +139,11 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
             return False
         
     def __pos__(self):
+        '''
+        Geeft de positieve van de matrix terug.
+            Invoer: self: een element van de klasse Matrix
+            Uitvoer: positief: de positieve van self
+        '''
         if self.isMatrix():
             positief = Matrix([],1)
             for i in range(0, len(self.elementen)):
@@ -97,6 +152,11 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
             return positief
     
     def __neg__(self):
+        '''
+        Geeft het negatieve van de matrix terug.
+            Invoer: self: een element van de klasse Matrix
+            Uitvoer: negatie: de negatie van self
+        '''
         if self.isMatrix():
             negatie = Matrix([],1)
             for i in range(0, len(self.elementen)):
@@ -106,6 +166,11 @@ class Matrix: #De getallen van de matrix behandelen we modulo 2
         
         
 def decimaalBinair(decimaal):
+    '''
+    Geeft een binair getal terug wat equivalent is aan het decimaal getal
+        Invoer: decimaal: een decimaal integer
+        Uitvoer: tekst: het binaire getal wat decimaal representeert    
+    '''
     if decimaal == 0:
         return 0
     else:
@@ -124,6 +189,11 @@ def decimaalBinair(decimaal):
     return tekst
 
 def binairDecimaal(binair):
+    '''
+    Geeft een decimaal getal terug wat equivalent is aan het binaire getal
+        Invoer: binair: een binair getal, beginnend met 1
+        Uitvoer: decimaal: het decimale getal wat binair representeert
+    '''
     lijst = [int(x) for x in str(binair)]
     decimaal = 0
     for i in range(0,len(lijst)):
@@ -131,6 +201,12 @@ def binairDecimaal(binair):
     return decimaal
     
 def nibbles(input):
+    '''
+    Geeft een lijst terug, waarin lijsten van nibbles van vier bits staan
+        Invoer: input: een string
+        Uitvoer: lijst: lijst van lijsten van telkens vier bits. Elke acht bits 
+                 representeren één karakter van invoer
+    '''
     binair=''
     for i in input:
         x=decimaalBinair(ord(i))
@@ -147,6 +223,12 @@ def nibbles(input):
     return lijst
 
 def parity_vector(input):
+    '''
+    Geef een lijst van vectoren terug, waarin pariteitsbits zijn verwerkt
+        Invoer: input: een lijst van lijsten van lengte 4
+        Uitvoer: lijst: een lijst van vectoren van lengte 7 terug, waarin
+                 de pariteitsbits van de nibbles van input zijn verwerkt    
+    '''
     lijst=[]
     G=Matrix([1,1,0,1,1,0,1,1,1,0,0,0,0,1,1,1,0,1,0,0,0,0,1,0,0,0,0,1],4)
     for i in range(len(input)):
@@ -155,6 +237,11 @@ def parity_vector(input):
     return lijst
 
 def parity_check(input):
+    '''
+    Geeft een lijst van vectoren terug, welke zijn gecheckt op fouten mbv de pariteitsbits
+        Invoer: input: lijst van vectoren van lengte 7, met pariteitsbits
+        Uitvoer: lijst: lijst van vectoren van lengte 3, die 
+    '''
     lijst=[]
     H=Matrix([1,0,1,0,1,0,1,0,1,1,0,0,1,1,0,0,0,1,1,1,1],7)
     for i in range(len(input)):
