@@ -1,5 +1,10 @@
 import random
 def decimaalBinair(decimaal):
+    '''
+    Geeft een binair getal terug wat equivalent is aan het decimaal getal
+        Invoer: decimaal: een decimaal integer
+        Uitvoer: tekst: het binaire getal wat decimaal representeert    
+    '''
     if decimaal == 0:
         return 0
     else:
@@ -18,6 +23,11 @@ def decimaalBinair(decimaal):
     return tekst
 
 def binairDecimaal(binair):
+    '''
+    Geeft een decimaal getal terug wat equivalent is aan het binaire getal
+        Invoer: binair: een binair getal, beginnend met 1
+        Uitvoer: decimaal: het decimale getal wat binair representeert
+    '''
     lijst = [int(x) for x in str(binair)]
     decimaal = 0
     for i in range(0,len(lijst)):
@@ -25,6 +35,12 @@ def binairDecimaal(binair):
     return decimaal
     
 def nibbles(input):
+    '''
+    Geeft een lijst terug, waarin lijsten van nibbles van vier bits staan
+        Invoer: input: een string
+        Uitvoer: lijst: lijst van lijsten van telkens vier bits. Elke acht bits 
+                 representeren één karakter van invoer
+    '''
     binair=''
     for i in input:
         x=decimaalBinair(ord(i))
@@ -40,7 +56,13 @@ def nibbles(input):
             lijst[i]+=[int(binair[i*4+j])]
     return lijst
 
-def parity_vector(input):
+def parity_lijst(input):
+    '''
+    Geeft een lijst van lijsten terug, waarin de pariteitsvectoren zijn verwerkt
+        Invoer: input: een lijst van lijsten van lengte 4
+        Uitvoer: lijst: een lijst van lijsten van lengte 7, waarin de pariteitsbits
+                 van de nibbles van input zijn verwerkt    
+    '''
     lijst=[]
     for i in range(len(input)):
         p1=input[i][0]^input[i][1]^input[i][3]
@@ -50,6 +72,12 @@ def parity_vector(input):
     return lijst
 
 def check_correct(input):
+    '''
+    Geeft een lijst van lijsten terug waarin de lijsten zijn gecontroleerd en
+    verbeterd met behulp van de pariteitsbits.
+        Invoer: input: een lijst van lijsten van lengte 7
+        Uitvoer: lijst: een lijst van lijsten van lengte 7
+    '''
     lijst=[]
     for i in range(len(input)):
         p1=input[i][0]^input[i][2]^input[i][4]^input[i][6]
@@ -64,6 +92,13 @@ def check_correct(input):
     return lijst
 
 def decodeer(input):
+    '''
+    Geeft een string van karakters terug die gerepresenteerd werd door alle bits 
+    in de lijst van de input.
+        Invoer: input: een lijst van lijsten van lengte 7
+        Uitvoer: uitvoer: een string waarvan de karakters bepaald worden door alle
+                 boodschapsbits uit input
+    '''
     string=''
     uitvoer=''
     for i in range(len(input)):
@@ -73,6 +108,14 @@ def decodeer(input):
     return uitvoer
 
 def random_verandering(input,aantal):
+    '''
+    Geeft een lijst van lijsten terug, waarvan een aantal elementen van die lijsten 
+    willekeurig veranderd zijn.
+        Invoer: input: lijst van lijsten met lengte 7
+                aantal: een positieve integer die het aantal fouten weergeeft
+        Uitvoer: ontvangst: lijst van lijsten met lengte 7 waarin aantal keer een 
+                 bit geflipt is van input
+    '''
     verstuur=input
     lijst=[]
     for i in range(len(verstuur)):
@@ -87,10 +130,18 @@ def random_verandering(input,aantal):
     return ontvangst
         
 def hamming(input,aantal):
+    '''
+    Geeft een boodschap terug die na het versturen door een communicatiekanaal
+    met ruis is gecontroleerd op fouten en verbeterd is.
+        Invoer: input: een string
+                aantal: een positieve integer
+        Uitvoer: er wordt een string met de boodschap na de fouten geprint
+                 d: een string
+    '''
     if type(aantal)!=int or aantal<0:
         raise TypeError('Er is geen geldig aantal fouten opgegeven.')
     n=nibbles(str(input))
-    v=parity_vector(n)
+    v=parity_lijst(n)
     r=random_verandering(v,aantal)
     print('Uw boodschap na de fouten is:',decodeer(r))
     c=check_correct(r)
@@ -98,6 +149,13 @@ def hamming(input,aantal):
     return d
 
 def hamming_code():
+    '''
+    Geeft de hamming(input,aantal) code terug, na eerst om input gevraagd te hebben
+        Invoer: code: een string
+                aantal: een positieve integer
+        Uitvoer: hamming(code,aantal): de functie hamming wordt uitgevoerd met 
+                 code en aantal.
+    '''
     code=str(input('Wat wilt u versturen? '))
     binair=''
     for i in code:
