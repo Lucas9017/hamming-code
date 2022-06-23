@@ -44,16 +44,19 @@ def nibbles(input):
     binair=''
     for i in input:
         x=decimaalBinair(ord(i))
+        #we zetten het decimale ASCII getal van het karakter uit de string om in binaire taal
         l=8-len(x)
         if l==0:
             binair+=x
         else:
             binair+='0'*l+x
+        #we zorgen ervoor dat elk karakter door een binair getal van lengte 8 wordt gerepresenteert
     lengte=len(binair)
     lijst=[[] for i in range(0,lengte,4)]
     for i in range(len(lijst)):
         for j in range(0,4):
             lijst[i]+=[int(binair[i*4+j])]
+    #we zetten elke 4 bits in een lijst, die lijsten zetten we weer in een overkoepelende lijst
     return lijst
 
 def parity_lijst(input):
@@ -65,10 +68,13 @@ def parity_lijst(input):
     '''
     lijst=[]
     for i in range(len(input)):
+        #we bepalen de pariteitsbits met de bits waardoor deze gerepresenteerd wordt
         p1=input[i][0]^input[i][1]^input[i][3]
         p2=input[i][0]^input[i][2]^input[i][3]
         p3=input[i][1]^input[i][2]^input[i][3]
         lijst+=[[p1,p2,input[i][0],p3,input[i][1],input[i][2],input[i][3]]]
+        #we vullen een lege lijst met lijsten waarin 7 bits staan:
+            #drie pariteitsbits en 4 boodschaps-bits op de goede volgorde
     return lijst
 
 def check_correct(input):
@@ -80,12 +86,15 @@ def check_correct(input):
     '''
     lijst=[]
     for i in range(len(input)):
+        #we controleren of de pariteiten nog steeds klopt voor de drie pariteitsbits
         p1=input[i][0]^input[i][2]^input[i][4]^input[i][6]
         p2=input[i][1]^input[i][2]^input[i][5]^input[i][6]
         p3=input[i][3]^input[i][4]^input[i][5]^input[i][6]
         if p1==0 and p2==0 and p3==0:
+            #als de pariteit klopt, is er waarschijnlijk geen fout opgetreden
             lijst+=[input[i]]
         else:
+            #als er wel een fout is, moeten we de foute bit aanpassen
             plek=binairDecimaal(str(p3)+str(p2)+str(p1))-1
             input[i][plek]=input[i][plek]^1
             lijst+=[input[i]]
@@ -102,8 +111,10 @@ def decodeer(input):
     string=''
     uitvoer=''
     for i in range(len(input)):
+        #we gebruiken de boodschaps-bits om de ontvangen boodschap te bepalen
         string+=str(input[i][2])+str(input[i][4])+str(input[i][5])+str(input[i][6])
     for i in range(0,len(string),8):
+        #elke 8 bits representeren één karakter uit de string
         uitvoer+=chr(binairDecimaal(string[i:i+8]))
     return uitvoer
 
@@ -119,13 +130,17 @@ def random_verandering(input,aantal):
     verstuur=input
     lijst=[]
     for i in range(len(verstuur)):
+        #we zetten alle bits achter elkaar in een lijst
         lijst+=verstuur[i]
     lengte=len(lijst)
+    #er wordt 'aantal' keer een willekeurig getal gekozen uit de totale lengte van de lijst
     k = random.sample(range(0,lengte),aantal)
     for j in k:
+        #voor de gekozen willekeurige getallen, veranderen we de bits op die plek in de lijst
         lijst[j]=lijst[j]^1
     ontvangst=[]
     for i in range(0,lengte,7):
+        #we zetten de lijst weer om in een lijst van lijsten van lengte 7
         ontvangst+=[list(lijst[i:i+7])]
     return ontvangst
         
