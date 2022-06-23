@@ -1,7 +1,8 @@
 import random
-class Matrix:#De getallen van de matrix behandelen we modulo 2
+class Matrix:
     '''
     Een klasse om Matrices te definiëren
+    We werken met matrices modulo 2 dus alle getallen in de matrices zijn ofwel 0 ofwel 1
     
     De attributen zijn een lijst van elementen en een positief geheel getal dat
     het aantal kolommen representeert.
@@ -363,7 +364,7 @@ def hamming(input,aantal,m):
     d=decodeer(cor,m)
     return d
 
-def hamming_code():
+def hamming_code(): #Hamming(7,4)code
     code=str(input('Wat wilt u versturen? '))
     binair=''
     for i in code:
@@ -378,4 +379,4 @@ def hamming_code():
     aantal=int(input('Uw boodschap bevat '+str(lengte )+' bits. Hoeveel fouten moeten er ontstaan in deze bits bij het versturen? '))
     if aantal>lengte:
         raise TypeError('Er is geen geldig aantal fouten opgegeven.')
-    return hamming(code,aantal)
+    return hamming(code,aantal,3)
