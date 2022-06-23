@@ -164,7 +164,6 @@ class Matrix:#De getallen van de matrix behandelen we modulo 2
             negatie.kolommen = self.kolommen
             return negatie
         
-        
 def decimaalBinair(decimaal):
     '''
     Geeft een binair getal terug wat equivalent is aan het decimaal getal
@@ -199,11 +198,12 @@ def binairDecimaal(binair):
     for i in range(0,len(lijst)):
         decimaal += lijst[i] * 2**(len(lijst)-i-1)
     return decimaal
-    
-def nibbles(input):
+
+def splitsen(input,m):
     '''
-    Geeft een lijst terug, waarin lijsten van nibbles van vier bits staan
+    Geeft een lijst terug, waarin lijsten van bineaire code van 2^m-m-1 bits staan
         Invoer: input: een string
+        Invoer: m: het getal m dat aangeeft dat we Hamming(2^m-1,2^m-m-1)code gebruiken
         Uitvoer: lijst: lijst van lijsten van telkens vier bits. Elke acht bits 
                  representeren één karakter van invoer
     '''
@@ -212,57 +212,100 @@ def nibbles(input):
         x=decimaalBinair(ord(i))
         l=8-len(x)
         if l==0:
-            binair+=x
+            binair += x
         else:
-            binair+='0'*l+x
-    lengte=len(binair)
-    lijst=[[] for i in range(0,lengte,4)]
+            binair += '0'*l+x
+    
+    n = 2**m-m-1
+    while len(binair) % n != 0:
+        binair = binair + '0'
+    lengte = len(binair)
+    lijst=[[] for i in range(0,lengte,n)]
     for i in range(len(lijst)):
-        for j in range(0,4):
-            lijst[i]+=[int(binair[i*4+j])]
+        for j in range(0,n):
+            lijst[i] += [int(binair[i*n+j])]
     return lijst
 
-def parity_vector(input):
+def parity_vector(input,m):
     '''
     Geef een lijst van vectoren terug, waarin pariteitsbits zijn verwerkt
-        Invoer: input: een lijst van lijsten van lengte 4
-        Uitvoer: lijst: een lijst van vectoren van lengte 7 terug, waarin
+        Invoer: input: een lijst van lijsten van lengte 2^m-m-1
+        Invoer: m: het getal m dat aangeeft dat we Hamming(2^m-1,2^m-m-1)code gebruiken
+        Uitvoer: lijst: een lijst van vectoren van lengte 2^m-1 terug, waarin
                  de pariteitsbits van de nibbles van input zijn verwerkt    
     '''
     lijst=[]
-    G=Matrix([1,1,0,1,1,0,1,1,1,0,0,0,0,1,1,1,0,1,0,0,0,0,1,0,0,0,0,1],4)
+    if m == 3:
+        G=Matrix([1,1,0,1,1,0,1,1,1,0,0,0,0,1,1,1,0,1,0,0,0,0,1,0,0,0,0,1],4)
+    elif m == 4:
+        G = Matrix([1,1,0,1,1,0,1,0,1,0,1,1,0,1,1,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1],11)
+    else:
+        raise TypeError('Voor m=' + str(m) + ' hebben we geen code geschreven.')
     for i in range(len(input)):
         x=Matrix(input[i],1)
         lijst+=[G*x]
     return lijst
 
-def parity_check(input):
+def parity_check(input,m):
     '''
-    Geeft een lijst van vectoren terug, welke zijn gecheckt op fouten mbv de pariteitsbits
-        Invoer: input: lijst van vectoren van lengte 7, met pariteitsbits
-        Uitvoer: lijst: lijst van vectoren van lengte 3, die 
+    Geeft een lijst van vectoren terug, welke zijn gecheckt op fouten m.b.v. de pariteitsbits
+        Invoer: input: lijst van vectoren van lengte 2^m-1, met pariteitsbits
+        Invoer: m: het getal m dat aangeeft dat we Hamming(2^m-1,2^m-m-1)code gebruiken
+        Uitvoer: lijst: lijst van vectoren van lengte m, die aangeeft of er fouten in het ontvangen bericht zitten en waar die fouten zitten
     '''
     lijst=[]
-    H=Matrix([1,0,1,0,1,0,1,0,1,1,0,0,1,1,0,0,0,1,1,1,1],7)
+    if m == 3:
+        H=Matrix([1,0,1,0,1,0,1,0,1,1,0,0,1,1,0,0,0,1,1,1,1],7)
+    elif m == 4:
+        H = Matrix([1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],15)
+    else:
+        raise TypeError('Voor m=' + str(m) + ' hebben we geen code geschreven.')
+        
     for i in range(len(input)):
         lijst+=[H*input[i]]
     return lijst
         
-def correct(vector,check):
+def correct(vector,check,m):
+    '''
+    Corrigeerd de fouten die zijn aanstaan tijdens het versturen van het bericht
+        Invoer: vector: lijst van matrices, elke matrix is een vector waar eventueel fouten inzitten
+        Invoer: check: lijst van matrices, elke matrix is een vector die aangeeft waar de fout zit als er een fout in het ontvangen bericht zit
+        Invoer: m: het getal m dat aangeeft dat we Hamming(2^m-1,2^m-m-1)code gebruiken
+        Uitvoer: lijst_vector: lijst van matrices, elke matrix is een vector waarin de eventuele fouten zijn verbeterd
+    '''
     lijst_check=check
     lijst_vector=vector
+    elementenNulmatrix = []
+    for i in range(0,m):
+        elementenNulmatrix.append(0)
+    nulmatrix = Matrix(elementenNulmatrix,1) #De nulmatrix met m rijen en 1 kolom
+    
     for i in range(len(lijst_check)):
-        if lijst_check[i]!=Matrix([0,0,0],1):
+        if lijst_check[i] != nulmatrix:
             plek0=int(lijst_check[i].elementen[0])
             plek1=int(lijst_check[i].elementen[1])
             plek2=int(lijst_check[i].elementen[2])
-            plek=binairDecimaal(str(plek2)+str(plek1)+str(plek0))-1
-            lijst_vector[i].elementen[plek]=(lijst_vector[i].elementen[plek]+1)%2
+            if m == 3:
+                plek=binairDecimaal(str(plek2)+str(plek1)+str(plek0))-1
+                lijst_vector[i].elementen[plek]=(lijst_vector[i].elementen[plek]+1)%2
+            elif m == 4:
+                plek3=int(lijst_check[i].elementen[3])
+                plek=binairDecimaal(str(plek3)+str(plek2)+str(plek1)+str(plek0))-1
+                lijst_vector[i].elementen[plek]=(lijst_vector[i].elementen[plek]+1)%2
     return lijst_vector
       
-def decodeer(input):
+def decodeer(input,m):
+    '''
+    Decodeert het bericht waardoor de ontvanger de boodschap kan lezen
+        Invoer: input: lijst van matrices, elke matrix is een vector van 2^m-1 bits
+        Invoer: m: het getal m dat aangeeft dat we Hamming(2^m-1,2^m-m-1)code gebruiken
+        Uitvoer: uitvoer: de tekst die we krijgen als we de input hebben gedecodeerd
+    '''
     lijst=[]
-    R=Matrix([0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],7)
+    if m == 3:
+        R = Matrix([0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],7)
+    elif m == 4:
+        R = Matrix([0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],15)
     for i in range(len(input)):
         x=R*input[i]
         x=[str(element) for element in x.elementen]
@@ -270,12 +313,20 @@ def decodeer(input):
     lijst=[element for element in lijst]
     binair_rij=''.join(lijst)
     binair=str(binair_rij)
+    lengte=len(binair)//8
     uitvoer=''
-    for i in range(0,len(binair),8):
+    for i in range(0,lengte*8,8):
         uitvoer+=chr(binairDecimaal(binair[i:i+8]))
     return uitvoer
 
-def random_verandering(input,aantal):
+def random_verandering(input,aantal,m):
+    '''
+    Zorgt voor fouten bij het versturen, op willekeurige plaatsen worden nullen veranderd in enen en andersom 
+        Invoer: input: lijst van matrices, elke matrix is een vector van 2^m-1 bits
+        Invoer: aantal: het aantal fouten dat moet optreden bij het verzenden van het bericht
+        Invoer: m: het getal m dat aangeeft dat we Hamming(2^m-1,2^m-m-1)code gebruiken
+        Uitvoer: uitvoer: de tekst die we krijgen als we de input hebben gedecodeerd
+    '''
     verstuur=input
     lijst=[]
     for i in range(len(verstuur)):
@@ -284,21 +335,32 @@ def random_verandering(input,aantal):
     k = random.sample(range(0,lengte),aantal)
     for j in k:
         lijst[j]=(int(lijst[j])+1)%2
+        
     ontvangst=[]
-    for i in range(0,lengte,7):
-        ontvangst+=[Matrix([lijst[i],lijst[i+1],lijst[i+2],lijst[i+3],lijst[i+4],lijst[i+5],lijst[i+6]],1)]
+    for i in range(0,lengte,2**m-1):
+        elementen = []
+        for j in range(0,2**m-1):
+            elementen.append(lijst[i+j])
+        ontvangst += [Matrix(elementen, 1)]
     return ontvangst
         
-def hamming(input,aantal):
+def hamming(input,aantal,m):
+    '''
+    In een boodschap worden een aantal fouten gemaakt en door het hammingcode algoritme verbeterd
+        Invoer: input: string, tekst die we willen versturen
+        Invoer: aantal: het aantal fouten dat we in het verzonden bericht willen hebben
+        Invoer: m: het getal m dat aangeeft dat we Hamming(2^m-1,2^m-m-1)code gebruiken (dit werkt alleen voor m=3 en m=4)
+        Uitvoer: d: de tekst die we krijgen als we de input hebben verzonden en verbeterd
+    '''
     if type(aantal)!=int or aantal<0:
         raise TypeError('Er is geen geldig aantal fouten opgegeven')
-    n=nibbles(str(input))
-    v=parity_vector(n)
-    r=random_verandering(v,aantal)
-    print('Uw boodschap na de fouten is:',decodeer(r))
-    c=parity_check(r)
-    cor=correct(r,c)
-    d=decodeer(cor)
+    n=splitsen(str(input),m)
+    v=parity_vector(n,m)
+    r=random_verandering(v,aantal,m)
+    print('Uw boodschap na de fouten is:',decodeer(r,m))
+    c=parity_check(r,m)
+    cor=correct(r,c,m)
+    d=decodeer(cor,m)
     return d
 
 def hamming_code():
